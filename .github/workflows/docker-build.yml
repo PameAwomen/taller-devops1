@@ -1,0 +1,26 @@
+name: Docker build web
+
+on:
+  push:
+      branches: [ "master"]
+  pull_request:
+      branches: [ "master"]
+
+
+      
+jobs:
+
+    build: 
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Login docker github registry
+            uses: docker/login-action@v3.2.0
+            with:
+                registry: ghcr.io
+                username: ${{github.actor}}
+                password: ${{ secret.DK_TOKEN}}
+
+        - uses: actions/checkout@v4
+        - name: Build the Docker image
+        - run: docker build --tag ghcr.io/PameAwomen/simple-web-page:latest -t ghcr.io/PameAwomen/simple-web-page:$(echo $GITHUB_SHA | cut -c 1-8) --push .
